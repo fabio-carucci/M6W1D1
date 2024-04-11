@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
-const authorsRoutes = require('./routes/authorsRoutes');
+const authorsRoutes = require('./routes/authorsRoutes'); // Importa le routes degli autori
 
 const PORT = process.env.PORT || 5002;
 const db = process.env.DB_URL;
 
-const app = express();
+const app = express(); // Crea un'istanza di Express
 
 // Middleware per consentire le richieste CORS dal frontend
 app.use(cors());
