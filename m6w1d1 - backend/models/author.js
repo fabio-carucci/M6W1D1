@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Definizione dello schema per il modello Utente
-const utenteSchema = new mongoose.Schema({
+const authorSchema = new mongoose.Schema({
     nome: {
         type: String,
         required: true
@@ -25,5 +25,5 @@ const utenteSchema = new mongoose.Schema({
     }
 });
 
-// Creazione del modello Utente utilizzando lo schema definito sopra
-module.exports = mongoose.model('Utente', utenteSchema);
+// Creazione del modello author utilizzando lo schema definito sopra
+module.exports = mongoose.model('author', authorSchema);
