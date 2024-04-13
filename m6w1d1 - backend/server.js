@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const authorsRoutes = require('./routes/authorsRoutes'); // Importa le routes degli autori
+const blogPostsRoutes = require('./routes/blogPostsRoutes'); // Importa le routes degi post del Blog
 
 const PORT = process.env.PORT || 5002;
 const db = process.env.DB_URL;
@@ -33,5 +34,6 @@ const connectDB = async () => {
 // Invocazione della funzione di connessione al database
 connectDB();
 
-// Utilizza la route degli autori nel server
+// Utilizza le routes
 app.use('/api', authorsRoutes);
+app.use('/api', blogPostsRoutes);

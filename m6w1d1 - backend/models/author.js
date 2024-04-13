@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Definizione dello schema per il modello Utente
+// Definizione dello schema per il modello author
 const authorSchema = new mongoose.Schema({
     nome: {
         type: String,

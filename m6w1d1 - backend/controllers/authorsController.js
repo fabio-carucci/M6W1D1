@@ -20,10 +20,10 @@ exports.getAuthorById = async (req, res) => {
     try {
         const authorId = req.params.id; // Ottieni l'ID dell'autore dalla richiesta
         // Trova l'autore con l'ID specificato nel database
-        const author = await author.findById(authorId);
+        const findedAuthor = await author.findById(authorId);
         // Se l'autore è stato trovato, invia l'autore come risposta
-        if (author) {
-            res.json(author);
+        if (findedAuthor) {
+            res.json(findedAuthor);
         } else {
             // Se l'autore non è stato trovato, invia un messaggio di errore
             res.status(404).json({ message: 'Autore non trovato.' });
@@ -47,5 +47,45 @@ exports.createAuthor = async (req, res) => {
         // Se si verifica un errore, invia un messaggio di errore come risposta
         console.error(err);
         res.status(500).json({ message: 'Si è verificato un errore durante la creazione dell\'autore.' });
+    }
+};
+
+// Metodo per aggiornare un autore
+exports.updateAuthorById = async (req, res) => {
+    try {
+        const authorId = req.params.id; // Ottieni l'ID dell'autore dalla richiesta
+        // Trova l'autore con l'ID specificato nel database e aggiorna i dati con quelli ricevuti nel corpo della richiesta
+        const updatedAuthor = await author.findByIdAndUpdate(authorId, req.body, { new: true });
+        // Se l'autore è stato trovato e aggiornato correttamente, invia l'autore aggiornato come risposta
+        if (updatedAuthor) {
+            res.json(updatedAuthor);
+        } else {
+            // Se l'autore non è stato trovato, invia un messaggio di errore
+            res.status(404).json({ message: 'Autore non trovato.' });
+        } 
+    } catch (err) {
+        // Se si verifica un errore, invia un messaggio di errore come risposta
+        console.error(err);
+        res.status(500).json({ message: 'Si è verificato un errore durante l\'aggiornamento dell\'autore.' });
+    }
+};
+
+//Metodo per eliminare un autore
+exports.deleteAuthor = async (req, res) => {
+    try {
+        const authorId = req.params.id; // Ottieni l'ID dell'autore dalla richiesta
+        // Trova l'autore con l'ID specificato nel database e elimina
+        const deletedAuthor = await author.findByIdAndDelete(authorId);
+        // Se l'autore è stato trovato e eliminato correttamente, invia l'autore eliminato come risposta
+        if (deletedAuthor) {
+            res.json(deletedAuthor);
+        } else {
+            // Se l'autore non è stato trovato, invia un messaggio di errore
+            res.status(404).json({ message: 'Autore non trovato.' });
+        } 
+    } catch (err) {
+        // Se si verifica un errore, invia un messaggio di errore come risposta
+        console.error(err);
+        res.status(500).json({ message: 'Si è verificato un errore durante l\'eliminazione dell\'autore.' });
     }
 };
