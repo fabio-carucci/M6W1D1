@@ -1,10 +1,18 @@
 const blogPost = require('../models/blogPost');
 
-// Metodo per ottenere la lista di blogPosts
 exports.getBlogPosts = async (req, res) => {
     try {
-        // Ottieni la lista dei blogPosts dal database
-        const blogPosts = await blogPost.find();
+        // Controlla se è presente il parametro 'title' nella query della richiesta
+        const { title } = req.query;
+        let query = {};
+
+        // Se il parametro 'title' è presente, crea una query per cercare i blogPosts con titolo corrispondente
+        if (title) {
+            query = { title: { $regex: title, $options: 'i' } }; // Utilizza regex per una corrispondenza non case-sensitive
+        }
+
+        // Ottieni la lista dei blogPosts dal database con la query appropriata
+        const blogPosts = await blogPost.find(query);
 
         // Invia la lista dei blogPosts come risposta
         res.json(blogPosts);

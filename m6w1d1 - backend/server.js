@@ -35,5 +35,5 @@ const connectDB = async () => {
 connectDB();
 
 // Utilizza le routes
-app.use('/api', authorsRoutes);
-app.use('/api', blogPostsRoutes);
+app.use('/', authorsRoutes);
+app.use('/', blogPostsRoutes);

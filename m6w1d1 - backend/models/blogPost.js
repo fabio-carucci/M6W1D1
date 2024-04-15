@@ -13,7 +13,6 @@ const blogPostSchema = new mongoose.Schema({
     cover: { // Link dell'immagine
         type: String,
         required: true,
-        unique: true
     },
     readTime: {
         value: { // Numero
@@ -21,8 +20,7 @@ const blogPostSchema = new mongoose.Schema({
             required: true
         },
         unit: { // Unità di misura
-            type: String, 
-            enum: ['minutes', 'hours', 'days'],
+            type: String,
             required: true
         }
     },

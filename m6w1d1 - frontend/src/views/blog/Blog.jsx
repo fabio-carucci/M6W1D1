@@ -3,24 +3,32 @@ import { Container, Image } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import BlogAuthor from "../../components/blog/blog-author/BlogAuthor";
 import BlogLike from "../../components/likes/BlogLike";
-import posts from "../../data/posts.json";
 import "./styles.css";
 const Blog = props => {
   const [blog, setBlog] = useState({});
   const [loading, setLoading] = useState(true);
-  const params = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
-  useEffect(() => {
-    const { id } = params;
-    const blog = posts.find(post => post._id.toString() === id);
 
-    if (blog) {
-      setBlog(blog);
+  const getPostById = async () => {
+    try {
+      const response = await fetch(`http://localhost:5001/blogPosts/${id}`);
+      if (!response.ok) {
+        throw new Error("Errore durante il recupero del post");
+      }
+      const data = await response.json();
+      setBlog(data);
       setLoading(false);
-    } else {
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
       navigate("/404");
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    getPostById();
+  });
 
   if (loading) {
     return <div>loading</div>;
