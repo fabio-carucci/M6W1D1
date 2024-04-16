@@ -1,0 +1,22 @@
+https://www.mongodb.com/docs/manual/reference/operator/query/
+
+// Tutte le risorse con il dato isActive corrispondente a true
+query = { isActive: true }; --> 51 documents
+
+// Tutte le risorse con il dato age maggiore di 26
+{age: { $gt: 26 }} --> 54 documents
+
+// Tutte le risorse con il dato age maggiore di 26 e minore o uguale a 30
+{ age: { $gt: 26, $lte: 30 } } --> 19 documents
+
+// Tutte le risorse con il dato eyeColor che sia brown o blue
+{ eyeColor: { $in: ["brown", "blue"] } } --> 66 documents
+
+// Tutte le risorse che non presentano il dato eyeColor uguale a green
+{ eyeColor: { $ne: "green" } } --> 66 documents
+
+// Tutte le risorse che non presentano il dato eyeColor uguale a green e neanche blue
+{ eyeColor: { $nin: ["green", "blue"] } } --> 35 documents
+
+// Tutte le risorse con il dato company uguale a "FITCORE" e ritorna solo l'email
+db.collection.find({ company: "FITCORE" }, { _id: 0, email: 1 })
