@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const { badRequestHandler, genericErrorHandle } = require('./middlewares/errorHandler');
 
 const authorsRoutes = require('./routes/authorsRoutes'); // Importa le routes degli autori
 const blogPostsRoutes = require('./routes/blogPostsRoutes'); // Importa le routes degi post del Blog
@@ -16,6 +17,21 @@ app.use(cors());
 
 // Middleware per analizzare i body delle richieste in formato JSON
 app.use(express.json());
+
+// Utilizza le routes
+app.use('/', authorsRoutes);
+app.use('/', blogPostsRoutes);
+
+// Route generica per gestire il 404
+app.use('*', (req, res, next) => {
+    const err = new Error(`Not Found - ${req.originalUrl}`);
+    res.status(404);
+    next(err);
+  });
+
+// Utilizza i middlewares per gestire gli errori
+app.use(badRequestHandler); // status code: 400
+app.use(genericErrorHandle); // status code: 500 
 
 // Connessione al database MongoDB utilizzando Mongoose
 const connectDB = async () => {
@@ -33,7 +49,3 @@ const connectDB = async () => {
 
 // Invocazione della funzione di connessione al database
 connectDB();
-
-// Utilizza le routes
-app.use('/', authorsRoutes);
-app.use('/', blogPostsRoutes);
