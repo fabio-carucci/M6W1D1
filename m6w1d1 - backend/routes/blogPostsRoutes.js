@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getBlogPosts, getBlogPostById, createBlogPost, updateBlogPostById, deleteBlogPost } = require('../controllers/blogPostsController');
+const { getBlogPosts, getBlogPostById, createBlogPost, updateBlogPostById, deleteBlogPost, updateCoverByBlogPostId } = require('../controllers/blogPostsController');
 const authenticationMiddleware = require('../middlewares/authenticationHandler');
+const { uploadCover } = require('../middlewares/multer');
 
 // Definizione delle routes
 router
@@ -9,6 +10,7 @@ router
     .get('/blogPosts/:id', getBlogPostById) // Route GET per ottenere un singolo post per ID
     .post('/blogPosts', createBlogPost) // Route POST per creare un nuovo post
     .put('/blogPosts/:id', authenticationMiddleware, updateBlogPostById) // Route PUT per aggiornare un singolo post per ID
-    .delete('/blogPosts/:id', authenticationMiddleware, deleteBlogPost); // Route DELETE per eliminare un singolo post per ID
+    .delete('/blogPosts/:id', authenticationMiddleware, deleteBlogPost) // Route DELETE per eliminare un singolo post per ID
+    .patch('/blogPosts/:id/avatar', uploadCover, updateCoverByBlogPostId) //Route PATCH per aggiornare il campo "cover" di un post
 
 module.exports = router;

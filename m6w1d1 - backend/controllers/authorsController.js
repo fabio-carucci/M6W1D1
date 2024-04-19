@@ -38,9 +38,8 @@ exports.getAuthorById = async (req, res) => {
 // Metodo per creare un nuovo autore
 exports.createAuthor = async (req, res) => {
     try {
-        const { nome, cognome, email, dataDiNascita, avatar } = req.body; // Ottieni i dati dell'autore dalla richiesta
         // Crea un nuovo autore nel database utilizzando i dati forniti
-        const newAuthor = await author.create({ nome, cognome, email, dataDiNascita, avatar });
+        const newAuthor = await author.create(req.body);
         // Invia il nuovo autore creato come risposta
         res.status(201).json(newAuthor);
     } catch (err) {
@@ -88,4 +87,26 @@ exports.deleteAuthor = async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Si è verificato un errore durante l\'eliminazione dell\'autore.' });
     }
+};
+
+// Metodo per aggiungere/modificare l'url dell'immagine dell'autore
+exports.updateAvatarByAuthorId = async (req, res) => {
+    try {
+        // Cercare e aggiornare utente con Id specifico alla proprietà avatar
+        const updatedAuthor = await author.findByIdAndUpdate(
+            req.params.id, 
+            { avatar: req.file.path },
+            { new: true }
+        );
+        // Se l'autore è stato trovato e aggiornato correttamente, invia l'autore aggiornato come risposta
+        if(updatedAuthor) {
+            res.json(updatedAuthor);
+        } else {
+            // Se l'autore non è stato trovato, invia un messaggio di errore
+            res.status(404).json({ message: 'Autore non trovato.' });
+        };
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Si è verificato un errore durante l\'aggiornamento dell\'autore.' });
+    };  
 };

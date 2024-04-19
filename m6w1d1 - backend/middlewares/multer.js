@@ -1,12 +1,13 @@
-import multer from 'multer';
-import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+require('dotenv').config();
 
 // Configurato cloudinary con le credenziali
 cloudinary.config({
-    cloud_name: 'il-tuo-nome-cloudinary',
-    api_key: 'la-tua-api-key',
-    api_secret: 'il-tuo-api-secret'
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET
 });
 
 // Creazione di un'istanza di CloudinaryStorage per gli avatar
@@ -30,10 +31,7 @@ const coverStorage = new CloudinaryStorage({
 });
 
 // Middleware per caricare un singolo file di avatar
-const uploadAvatar = multer({ storage: avatarStorage }).single('avatar');
+exports.uploadAvatar = multer({ storage: avatarStorage }).single('avatar');
 
 // Middleware per caricare un singolo file di copertina
-const uploadCover = multer({ storage: coverStorage }).single('cover');
-
-// Esporta i middleware
-export { uploadAvatar, uploadCover };
+exports.uploadCover = multer({ storage: coverStorage }).single('cover');

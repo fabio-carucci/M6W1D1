@@ -97,3 +97,25 @@ exports.deleteBlogPost = async (req, res) => {
         res.status(500).json({ message: 'Si è verificato un errore durante l\'eliminazione del post nel Blog.' });
     }
 };
+
+// Metodo per aggiungere/modificare l'url della cover del blog
+exports.updateCoverByBlogPostId = async (req, res) => {
+    try {
+        // Cercare e aggiornare utente con Id specifico alla proprietà avatar
+        const updatedBlogPost = await blogPost.findByIdAndUpdate(
+            req.params.id, 
+            { cover: req.file.path },
+            { new: true }
+        );
+        // Se il post del Blog è stato trovato e aggiornato correttamente, invia quello aggiornato come risposta
+        if(updatedBlogPost) {
+            res.json(updatedBlogPost);
+        } else {
+            // Se il post non è stato trovato, invia un messaggio di errore
+            res.status(404).json({ message: 'BlogPost non trovato.' });
+        };
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Si è verificato un errore durante l\'aggiornamento del Post del Blog.' });
+    };  
+};
