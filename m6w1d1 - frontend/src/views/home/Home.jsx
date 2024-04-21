@@ -13,7 +13,7 @@ const Home = (props) => {
 
   return (
     <Container fluid="sm">
-      <h1 className="blog-main-title mb-3">Benvenuto sull' EpiBlog!</h1>
+      <h1 className="blog-main-title mb-3 text-success">Benvenuto sull' EpiBlog!</h1>
       <InputGroup className="mb-3">
         <Form.Control
           type="text"

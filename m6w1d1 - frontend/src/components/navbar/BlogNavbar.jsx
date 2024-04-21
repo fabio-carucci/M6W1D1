@@ -1,15 +1,24 @@
 import React from "react";
-import { Button, Container, Navbar, Nav } from "react-bootstrap";
+import { Button, Container, Navbar, Nav, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import { PersonCircle } from 'react-bootstrap-icons';
 import logo from "../../assets/logo.png";
 import "./styles.css";
+import { useAuth } from "../../context/AuthContextProvider";
+
 const NavBar = props => {
+
+  const { logout } = useAuth();
+
+  const avatar = null;
+
   return (
     <Navbar expand="lg" className="blog-navbar" fixed="top">
       <Container className="justify-content-between">
-        <Navbar.Brand as={Link} to="/">
-          <img className="blog-navbar-brand" alt="logo" src={logo}/>
+        <Navbar.Brand as={Link} to="/" className="fs-3 fst-italic text-success fw-bold">
+          <img className="blog-navbar-brand d-inline-block align-top" alt="logo" src={logo}/>
+          {' '}EpiBlog
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -17,7 +26,7 @@ const NavBar = props => {
             <Nav.Link as={NavLink} to="/" activeclassname="active">Home</Nav.Link>
             <Nav.Link as={NavLink} to="/authors" activeclassname="active">Authors</Nav.Link>
           </Nav>
-          <Button as={Link} to="/new" className="blog-navbar-add-button bg-dark">
+          <Button as={Link} to="/new" className="blog-navbar-add-button bg-dark me-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -30,6 +39,20 @@ const NavBar = props => {
             </svg>
             Nuovo Articolo
           </Button>
+          <Dropdown>
+            <Dropdown.Toggle id="dropdown-basic" className="custom-dropdown-toggle" as="span">
+              {avatar ? (
+                <img src={avatar} alt="Avatar" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
+              ) : (
+                <PersonCircle style={{color: "green"}} size={40} />
+              )}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu align="end">
+              <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+              <Dropdown.Item as={Link} to="/profile">Il Mio Profilo</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Navbar.Collapse>
       </Container>
     </Navbar>

@@ -1,5 +1,6 @@
 .blog-navbar-brand {
-  width: 140px;
+  width: 40px;
+  border-radius: 5px;
 }
 
 .blog-navbar {
@@ -21,4 +22,14 @@
 .active {
   text-decoration: underline;
   text-underline-offset: 7px;
+}
+
+.custom-dropdown-toggle {
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  cursor: pointer;
+}
+.custom-dropdown-toggle::after {
+  color: green;
 }

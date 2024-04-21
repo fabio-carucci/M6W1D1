@@ -1,0 +1,27 @@
+/* Stile per uniformare l'aspetto del campo di input della data con gli altri campi del modulo */
+.react-datepicker-wrapper {
+    width: 100%;
+}
+
+/* Stile per uniformare il bordo del campo di input della data con gli altri campi del modulo */
+.react-datepicker__input-container input {
+    width: 100%;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+/* Stile per uniformare il bordo del campo di input della data quando è in focus */
+.react-datepicker__input-container input:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}  

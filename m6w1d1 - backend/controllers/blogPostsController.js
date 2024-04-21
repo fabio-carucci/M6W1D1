@@ -1,4 +1,5 @@
 const blogPost = require('../models/blogPost');
+const sendEmail = require('../sendEmail');
 
 exports.getBlogPosts = async (req, res) => {
     try {
@@ -51,6 +52,9 @@ exports.createBlogPost = async (req, res) => {
         const newBlogPost = await blogPost.create({ category, title, cover, readTime: { value, unit }, author: { name, avatar }, content });
         // Invia il nuovo blogPost creato come risposta
         res.status(201).json(newBlogPost);
+
+        // Invia la mail a creazione del blogPost
+        // sendEmail("test@epicode.it", `<h1>${name} hai creato il tuo blog dal titolo "${title}"</h1>`);
     } catch (err) {
         // Se si verifica un errore, invia un messaggio di errore come risposta
         console.error(err);

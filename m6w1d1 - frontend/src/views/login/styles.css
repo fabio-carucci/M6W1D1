@@ -1,0 +1,23 @@
+#login-container {
+    background-image: url(../../assets/sfondo\ Epiblog.png);
+    background-size: 200px;   
+    height: calc(100vh - 124px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#login-container .row {
+    width: 100%;
+    padding: 20px;
+    margin: 0px 30px;
+    background-color: whitesmoke; 
+    border-radius: 10px; 
+    align-items: center;
+}
+
+@media screen and (min-width: 492px) {
+    #login-container .row {
+        margin: 0px 70px;
+    }
+}

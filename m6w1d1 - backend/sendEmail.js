@@ -8,14 +8,14 @@ const sendEmail = async (sendTo, mailBody) => {
         host: 'smtp.ethereal.email',
         port: 587,
         auth: {
-            user: 'la-tua-email',
-            pass: 'la-tua-password'
+            user: 'moses.haag33@ethereal.email',
+            pass: 'tnMd4Rssj6nwxva4Dm'
         }
     });
 
     try {
         const mail = await transporter.sendMail({
-            from: "EpiBlog Tester <la-tua-email>",
+            from: "EpiBlog Tester <moses.haag33@ethereal.email>",
             to: sendTo,
             subject: "EpiBlog Testing Emails",
             html: mailBody
@@ -24,6 +24,6 @@ const sendEmail = async (sendTo, mailBody) => {
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 module.exports = sendEmail;
