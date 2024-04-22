@@ -47,9 +47,9 @@ exports.getBlogPostById = async (req, res) => {
 // Metodo per creare un nuovo blogPost
 exports.createBlogPost = async (req, res) => {
     try {
-        const { category, title, cover, readTime: { value, unit }, author: { name, avatar }, content } = req.body; // Ottieni i dati del post dalla richiesta
+        const { category, title, cover, readTime: { value, unit }, author, content } = req.body; // Ottieni i dati del post dalla richiesta
         // Crea un nuovo blogPost nel database utilizzando i dati forniti
-        const newBlogPost = await blogPost.create({ category, title, cover, readTime: { value, unit }, author: { name, avatar }, content });
+        const newBlogPost = await blogPost.create({ category, title, cover, readTime: { value, unit }, author, content });
         // Invia il nuovo blogPost creato come risposta
         res.status(201).json(newBlogPost);
 

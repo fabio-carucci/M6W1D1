@@ -25,14 +25,9 @@ const blogPostSchema = new mongoose.Schema({
         }
     },
     author: {
-        name: { // Nome
-            type: String, 
-            required: true
-        },
-        avatar: { // Immagine dell'autore
-            type: String, 
-            required: true
-        }
+        type: mongoose.Schema.Types.ObjectId, // Riferimento all'ID dell'autore nel database degli autori
+        ref: 'author', // Nome del modello dell'autore
+        required: true
     },
     content: { // HTML dell'articolo
         type: String,

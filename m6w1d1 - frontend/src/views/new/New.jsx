@@ -8,6 +8,7 @@ const NewBlogPost = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -16,10 +17,7 @@ const NewBlogPost = () => {
       value: 0,
       unit: ""
     },
-    author: {
-      name: "",
-      avatar: ""
-    },
+    author: "66252b6efa39b7d24912b140",
     content: ""
   });
 
@@ -35,14 +33,6 @@ const NewBlogPost = () => {
         ...formData,
         readTime: {
           ...formData.readTime,
-          [id]: value
-        }
-      });
-    } else if (id === 'name' || id === 'avatar')  {
-      setFormData({
-        ...formData,
-        author: {
-          ...formData.author,
           [id]: value
         }
       });
@@ -137,24 +127,6 @@ const NewBlogPost = () => {
                 <option value="Minute">Minute</option>
                 <option value="Hour">Hour</option>
               </Form.Select>
-            </Form.Group>
-          </Col>
-        </Row>
-          <Form.Label className="mt-3">Autore</Form.Label>
-        <Row>
-          <Col xs={3}>
-            <Form.Group controlId="name">
-              <Form.Control placeholder="Author" onChange={handleInputChange} required/>
-            </Form.Group>
-          </Col>
-          <Col xs={9}>
-            <Form.Group controlId="avatar">
-              <InputGroup>
-                <InputGroup.Text id="basic-addon3">
-                  https://example.com/authorImage/
-                </InputGroup.Text>
-                <Form.Control aria-describedby="basic-addon3" onChange={handleInputChange} required/>
-              </InputGroup>
             </Form.Group>
           </Col>
         </Row>
