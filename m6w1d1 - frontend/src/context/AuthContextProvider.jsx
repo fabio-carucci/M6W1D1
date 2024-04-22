@@ -13,9 +13,9 @@ export const AuthContextProvider = ({ children }) => {
     const loggedUser = localStorage.getItem("user");
     const isLoggedIn = localStorage.getItem("isLogged");
 
-    if (loggedUser) {
+    if (loggedUser !== null && isLoggedIn === "true") {
       setUser(JSON.parse(loggedUser));
-      setIsLogged(isLoggedIn === "true");
+      setIsLogged(true);
     }
   }, []);
 

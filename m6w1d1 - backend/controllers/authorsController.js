@@ -15,7 +15,7 @@ exports.getAuthors = async (req, res) => {
     }
 };
 
-// Metodo per ottenere un singolo autore
+// Metodo per ottenere un singolo autore dall'Id
 exports.getAuthorById = async (req, res) => {
     try {
         const authorId = req.params.id; // Ottieni l'ID dell'autore dalla richiesta
@@ -35,11 +35,48 @@ exports.getAuthorById = async (req, res) => {
     }
 };
 
+// Metodo per ottenere un singolo autore dall'email e verificare la password
+exports.getAuthorByEmail = async (req, res) => {
+    try {
+        const { email, password } = req.body; // Ottieni email e password dall'oggetto di richiesta
+        // Cerca l'autore con l'email specificata nel database
+        const foundAuthor = await author.findOne({ email });
+        // Se l'autore non è stato trovato, invia un messaggio di errore
+        if (!foundAuthor) {
+            return res.status(404).json({ message: 'Autore non trovato.' });
+        }
+        // Verifica se la password è valida
+        const isPasswordValid = await foundAuthor.comparePassword(password);
+        if (!isPasswordValid) {
+            // Se la password non è valida, invia un messaggio di errore
+            return res.status(401).json({ message: 'Password non valida.' });
+        }
+        // Se si arriva a questo punto, la password è valida, invia l'autore come risposta
+        res.json(foundAuthor);
+    } catch (err) {
+        // Se si verifica un errore, invia un messaggio di errore come risposta
+        console.error(err);
+        res.status(500).json({ message: 'Si è verificato un errore durante il recupero dell\'autore.' });
+    }
+};
+
+
 // Metodo per creare un nuovo autore
 exports.createAuthor = async (req, res) => {
     try {
-        // Crea un nuovo autore nel database utilizzando i dati forniti
-        const newAuthor = await author.create(req.body);
+        let avatarUrl = null;
+
+        // Verifica se è stato caricato un file
+        if (req.file && req.file.path) {
+            // L'immagine è già stata caricata su Cloudinary nel middleware precedente
+            avatarUrl = req.file.path;
+        }
+
+        // Crea un nuovo autore nel database utilizzando i dati forniti e il link di Cloudinary come avatar
+        const newAuthor = await author.create({
+            ...req.body,
+            avatar: avatarUrl // Imposta l'avatar solo se è stato caricato un file
+        });
         // Invia il nuovo autore creato come risposta
         res.status(201).json(newAuthor);
     } catch (err) {

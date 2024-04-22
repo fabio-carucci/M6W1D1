@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-// Definizione dello schema per il modello author
 const authorSchema = new mongoose.Schema({
     nome: {
         type: String,
@@ -16,14 +16,44 @@ const authorSchema = new mongoose.Schema({
         unique: true
     },
     dataDiNascita: {
-        type: String,
+        type: Date,
         required: true
     },
     avatar: {
         type: String,
         required: false
+    },
+    password: {
+        type: String,
+        required: true
     }
 });
 
-// Creazione del modello author utilizzando lo schema definito sopra
+// Middleware di pre-save per hashare la password prima di salvarla nel database
+authorSchema.pre('save', async function (next) {
+    const author = this;
+    // Se la password non è stata modificata, continua
+    if (!author.isModified('password')) {
+        return next();
+    }
+    try {
+        // Genera il salt e hash della password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(author.password, salt);
+        author.password = hashedPassword;
+        next();
+    } catch (error) {
+        return next(error);
+    }
+});
+
+// Metodo per confrontare la password fornita con quella nel database
+authorSchema.methods.comparePassword = async function (password) {
+    try {
+        return await bcrypt.compare(password, this.password);
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = mongoose.model('author', authorSchema);

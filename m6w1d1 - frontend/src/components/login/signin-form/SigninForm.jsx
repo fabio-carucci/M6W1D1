@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Spinner } from 'react-bootstrap';
 import { useAuth } from '../../../context/AuthContextProvider';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -7,15 +7,51 @@ import "./styles.css";
 
 export default function SigninForm() {
 
-  const {login} = useAuth();
+  const { login } = useAuth();
 
   const [startDate, setStartDate] = useState(new Date()); // Stato per memorizzare la data di nascita selezionata
+  const [loading, setLoading] = useState(false); // Stato per il caricamento
 
   // Funzione per gestire la sottomissione del form
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    login();
+    try {
+      setLoading(true);
+      const formData = new FormData(); // Creazione di un oggetto FormData
+      formData.append('nome', e.target.formBasicFirstName.value); // Aggiungi il nome
+      formData.append('cognome', e.target.formBasicLastName.value); // Aggiungi il cognome
+      formData.append('email', e.target.formBasicEmail.value); // Aggiungi l'email
+      formData.append('password', e.target.formBasicPassword.value); // Aggiungi la password
+      formData.append('dataDiNascita', startDate.toISOString()); // Aggiungi la data di nascita come stringa ISO
+      formData.append('avatar', e.target.formBasicAvatar.files[0]); // Aggiungi l'avatar come file
+
+      // Effettua la richiesta POST
+      const response = await fetch('http://localhost:5001/authors', {
+        method: 'POST',
+        body: formData // Utilizza l'oggetto FormData come corpo della richiesta
+      });
+
+      // Controlla se la richiesta è andata a buon fine
+      if (response.ok) {
+
+        // Recupera i dati dell'utente registrato dal corpo della risposta
+        const userData = await response.json();
+
+        // Se la registrazione è avvenuta con successo, esegui l'accesso
+        await login(userData);
+
+      } else {
+        // Se la richiesta ha fallito, gestisci l'errore
+        console.error('Errore durante la registrazione');
+      }
+
+    } catch (error) {
+      console.error('Errore durante la registrazione:', error.message);
+
+    } finally {
+      setLoading(false); // Imposta lo stato di caricamento su false dopo la richiesta
+    }
   };
 
   return (
@@ -67,8 +103,8 @@ export default function SigninForm() {
         </Form.Group>
 
         {/* Bottone per effettuare la registrazione */}
-        <Button variant="primary" className="mt-2" type="submit">
-          Signup
+        <Button variant="primary" className="mt-2" type="submit" disabled={loading}>
+          {loading ? <Spinner animation="border" size="sm" /> : 'Signup'}
         </Button>
       </Form>
     </div>

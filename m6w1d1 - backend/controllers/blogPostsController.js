@@ -1,4 +1,5 @@
 const blogPost = require('../models/blogPost');
+const author = require('../models/author')
 const sendEmail = require('../sendEmail');
 
 exports.getBlogPosts = async (req, res) => {
@@ -13,7 +14,7 @@ exports.getBlogPosts = async (req, res) => {
         }
 
         // Ottieni la lista dei blogPosts dal database con la query appropriata
-        const blogPosts = await blogPost.find(query);
+        const blogPosts = await blogPost.find(query).populate('author', 'nome avatar');
 
         // Invia la lista dei blogPosts come risposta
         res.json(blogPosts);
@@ -29,7 +30,7 @@ exports.getBlogPostById = async (req, res) => {
     try {
         const blogPostId = req.params.id; // Ottieni l'ID del post dalla richiesta
         // Trova il post con l'ID specificato nel database
-        const findedBlogPost = await blogPost.findById(blogPostId);
+        const findedBlogPost = await blogPost.findById(blogPostId).populate('author', 'nome avatar');
         // Se il blog è stato trovato, invia il blog come risposta
         if (findedBlogPost) {
             res.json(findedBlogPost);

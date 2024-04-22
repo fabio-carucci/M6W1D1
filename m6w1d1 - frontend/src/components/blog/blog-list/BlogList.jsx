@@ -1,37 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { Col, Row } from "react-bootstrap";
-// import posts from "../../../data/posts.json";
+import { Col, Row, Alert } from "react-bootstrap";
 import BlogItem from "../blog-item/BlogItem";
 
-export default function BlogList ({ searchTitle }) {
-
+export default function BlogList({ searchTitle }) {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchPosts = async (searchTitle) => {
     try {
-      // Costruisci l'URL con il parametro di query 'title' se è specificato
       let url = "http://localhost:5001/blogPosts";
       if (searchTitle) {
         url += `?title=${encodeURIComponent(searchTitle)}`;
       }
   
-      // Effettua la richiesta GET all'URL costruito
       const response = await fetch(url);
   
-      // Gestisci la risposta
       if (!response.ok) {
         throw new Error("Errore durante il recupero dei post del blog");
       }
       const data = await response.json();
       setPosts(data);
+      setLoading(false);
     } catch (error) {
-      console.error(error);
+      setError(error.message);
+      setLoading(false);
     }
   };  
 
   useEffect(() => {
     fetchPosts(searchTitle);
   }, [searchTitle]);
+
+  if (loading) {
+    return <p>Caricamento...</p>;
+  }
+
+  if (error) {
+    return <Alert variant="danger">{error}</Alert>;
+  }
+
+  if (posts.length === 0) {
+    return <p>Nessun post trovato.</p>;
+  }
 
   return (
     <Row>

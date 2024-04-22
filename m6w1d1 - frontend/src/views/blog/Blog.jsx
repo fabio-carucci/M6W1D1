@@ -41,7 +41,7 @@ const Blog = props => {
 
           <div className="blog-details-container">
             <div className="blog-details-author">
-              <BlogAuthor authorId={blog.author} />
+              <BlogAuthor author={blog.author} />
             </div>
             <div className="blog-details-info">
               <div>{blog.createdAt}</div>
