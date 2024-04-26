@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 const { badRequestHandler, genericErrorHandle } = require('./middlewares/errorHandler');
 
@@ -22,12 +23,17 @@ app.use(express.json());
 app.use('/', authorsRoutes);
 app.use('/', blogPostsRoutes);
 
+// Regola di fallback per il routing client-side
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+});
+
 // Route generica per gestire il 404
 app.use('*', (req, res, next) => {
     const err = new Error(`Not Found - ${req.originalUrl}`);
     res.status(404);
     next(err);
-  });
+});
 
 // Utilizza i middlewares per gestire gli errori
 app.use(badRequestHandler); // status code: 400

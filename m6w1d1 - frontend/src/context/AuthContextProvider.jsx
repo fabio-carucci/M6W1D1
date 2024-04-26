@@ -5,6 +5,7 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthContextProvider = ({ children }) => {
+
   const [user, setUser] = useState(null); // Stato per l'utente autenticato
   const [isLogged, setIsLogged] = useState(false); // Stato per gestire se l'utente è autenticato o meno
   const [logoutTimer, setLogoutTimer] = useState(null); // Timer per il logout automatico
@@ -44,6 +45,7 @@ export const AuthContextProvider = ({ children }) => {
     localStorage.setItem("isLogged", "true"); // Memorizza lo stato di autenticazione nel localStorage
 
     startLogoutTimer(); // Avvia il timer per il logout automatico
+    console.log(logoutTimer);
   };
 
   const logout = () => {

@@ -1,5 +1,20 @@
 const mongoose = require('mongoose');
 
+// Definizione dello schema per i commenti
+const commentSchema = new mongoose.Schema({
+    content: { 
+        type: String, 
+        required: true
+    },
+    createdBy: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'author', 
+        required: true 
+    }
+}, {
+    timestamps: true // Imposta i campi createdAt e updatedAt automaticamente per i commenti
+});
+
 // Definizione dello schema per il modello blog
 const blogPostSchema = new mongoose.Schema({
     category: { // Categoria del Post
@@ -32,7 +47,10 @@ const blogPostSchema = new mongoose.Schema({
     content: { // HTML dell'articolo
         type: String,
         required: true
-    }
+    },
+    comments: [commentSchema] // Utilizza lo schema dei commenti per gli oggetti nei commenti
+}, {
+    timestamps: true // Imposta i campi createdAt e updatedAt automaticamente per i blogPosts
 });
 
 // Creazione del modello blog utilizzando lo schema definito sopra

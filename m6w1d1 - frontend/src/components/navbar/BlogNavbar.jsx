@@ -6,12 +6,19 @@ import { PersonCircle } from 'react-bootstrap-icons';
 import logo from "../../assets/logo.png";
 import "./styles.css";
 import { useAuth } from "../../context/AuthContextProvider";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = props => {
 
   const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const avatar = null;
+
+  function handleLogout() {
+    logout();
+    navigate('/login');
+  }
 
   return (
     <Navbar expand="lg" className="blog-navbar" fixed="top">
@@ -49,7 +56,7 @@ const NavBar = props => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu align="end">
-              <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+              <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
               <Dropdown.Item as={Link} to="/profile">Il Mio Profilo</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
