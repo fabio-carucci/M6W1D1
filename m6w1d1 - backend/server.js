@@ -6,7 +6,8 @@ require('dotenv').config();
 const { badRequestHandler, genericErrorHandle } = require('./middlewares/errorHandler');
 
 const authorsRoutes = require('./routes/authorsRoutes'); // Importa le routes degli autori
-const blogPostsRoutes = require('./routes/blogPostsRoutes'); // Importa le routes degi post del Blog
+const blogPostsRoutes = require('./routes/blogPostsRoutes'); // Importa le routes dei post del Blog
+const commentsRoutes = require('./routes/commentsRoutes') // Importa le routes dei commenti dei post
 
 const PORT = process.env.PORT || 5002;
 const db = process.env.DB_URL;
@@ -22,6 +23,7 @@ app.use(express.json());
 // Utilizza le routes
 app.use('/', authorsRoutes);
 app.use('/', blogPostsRoutes);
+app.use('/', commentsRoutes);
 
 // Regola di fallback per il routing client-side
 app.get('*', (req, res) => {
