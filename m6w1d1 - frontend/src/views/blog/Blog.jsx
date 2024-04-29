@@ -47,7 +47,14 @@ const Blog = props => {
                 <BlogAuthor author={blog.author} />
               </div>
               <div className="blog-details-info">
-                <div>{blog.createdAt}</div>
+                <div>{(new Date(blog.createdAt)).toLocaleString('it-IT', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                  })}
+                </div>
                 <div>{`lettura da ${blog.readTime.value} ${blog.readTime.unit}`}</div>
                 <div
                   style={{

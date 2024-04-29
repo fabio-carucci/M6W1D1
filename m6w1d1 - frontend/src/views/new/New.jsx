@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Button, Container, Row, Col, Form, Spinner, InputGroup, Alert } from "react-bootstrap";
 import "./styles.css";
 import RichTextEditor from "./RichTextEditor";
+import { useAuth } from "../../context/AuthContextProvider"
 
 const NewBlogPost = () => {
   const [editorContent, setEditorContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+
+  const { user } = useAuth();
   
   const [formData, setFormData] = useState({
     title: "",
@@ -17,7 +20,7 @@ const NewBlogPost = () => {
       value: 0,
       unit: ""
     },
-    author: "66252b6efa39b7d24912b140",
+    author: user._id,
     content: ""
   });
 

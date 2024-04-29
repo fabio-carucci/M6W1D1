@@ -10,10 +10,8 @@ import { useNavigate } from "react-router-dom";
 
 const NavBar = props => {
 
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
-
-  const avatar = null;
 
   function handleLogout() {
     logout();
@@ -48,8 +46,9 @@ const NavBar = props => {
           </Button>
           <Dropdown>
             <Dropdown.Toggle id="dropdown-basic" className="custom-dropdown-toggle" as="span">
-              {avatar ? (
-                <img src={avatar} alt="Avatar" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
+              <span className="text-success fw-bold text-decoration-underline">{user.nome}</span>{' '}
+              {user.avatar ? (
+                <img src={user.avatar} alt="Avatar" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
               ) : (
                 <PersonCircle style={{color: "green"}} size={40} />
               )}
