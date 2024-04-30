@@ -33,9 +33,9 @@ export default function LoginForm() {
       }
       
       // Recupera i dati dell'utente loggato dal corpo della risposta
-      const userData = await response.json()
+      const {token, author} = await response.json()
       // Eseguo il login utilizzando i dati del formData
-      await login(userData);
+      await login(token, author);
 
     } catch (error) {
       setError('Errore durante il login: ' + error.message);

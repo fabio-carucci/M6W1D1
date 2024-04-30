@@ -1,4 +1,76 @@
 const author = require('../models/author');
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
+
+const secret = process.env.SECRET_PASSWORD;
+
+// Metodo per generare un token JWT
+function generateToken(author) {
+    const payload = {
+        id: author._id,
+        email: author.email
+    };
+    return jwt.sign(payload, secret, { expiresIn: '1m' }); // Il token scade dopo 1 ora
+};
+
+// Metodo per ottenere un singolo autore dall'email e verificare la password
+exports.getAuthorByEmail = async (req, res) => {
+    try {
+        const { email, password } = req.body; // Ottieni email e password dall'oggetto di richiesta
+        // Cerca l'autore con l'email specificata nel database
+        const foundAuthor = await author.findOne({ email });
+        // Se l'autore non è stato trovato, invia un messaggio di errore
+        if (!foundAuthor) {
+            return res.status(404).json({ message: 'Autore non trovato.' });
+        }
+        // Verifica se la password è valida
+        const isPasswordValid = await foundAuthor.comparePassword(password);
+        if (!isPasswordValid) {
+            // Se la password non è valida, invia un messaggio di errore
+            return res.status(401).json({ message: 'Password non valida.' });
+        }
+        // Se l'utente è autenticato con successo, genera un token JWT
+        const token = generateToken(foundAuthor);
+
+        // Creazione di un nuovo oggetto senza password e data di nascita
+        const authorData = {
+            _id: foundAuthor._id,
+            nome: foundAuthor.nome,
+            cognome: foundAuthor.cognome,
+            email: foundAuthor.email, 
+            avatar: foundAuthor.avatar
+        };
+
+        // Invia il token JWT al client
+        res.json({ token, author: authorData});
+    } catch (err) {
+        // Se si verifica un errore, invia un messaggio di errore come risposta
+        console.error(err);
+        res.status(500).json({ message: 'Si è verificato un errore durante il recupero dell\'autore.' });
+    }
+};
+
+// Metodo per ottenere il profilo dell'autore autenticato tramite token
+exports.getMyProfile = async (req, res) => {
+    try {
+        // Assume che il metodo per ottenere il profilo dell'autore prende l'ID dell'autore come parametro
+        const authorId = req.authorId;
+        
+        // Uso l'ID per fare una query al database e ottenere il profilo dell'autore
+        const authorProfile = await author.findById(authorId);
+
+        // Verifica se l'autore esiste
+        if (!authorProfile) {
+            return res.status(404).json({ message: "Profilo autore non trovato" });
+        }
+
+        // Se l'autore esiste, restituisci il profilo
+        res.status(200).json(authorProfile);
+    } catch (error) {
+        console.error("Errore durante il recupero del profilo dell'autore:", error);
+        res.status(500).json({ message: "Si è verificato un errore durante il recupero del profilo dell'autore" });
+    }
+};
 
 // Metodo per ottenere la lista degli autori
 exports.getAuthors = async (req, res) => {
@@ -34,32 +106,6 @@ exports.getAuthorById = async (req, res) => {
         res.status(500).json({ message: 'Si è verificato un errore durante il recupero dell\'autore.' });
     }
 };
-
-// Metodo per ottenere un singolo autore dall'email e verificare la password
-exports.getAuthorByEmail = async (req, res) => {
-    try {
-        const { email, password } = req.body; // Ottieni email e password dall'oggetto di richiesta
-        // Cerca l'autore con l'email specificata nel database
-        const foundAuthor = await author.findOne({ email });
-        // Se l'autore non è stato trovato, invia un messaggio di errore
-        if (!foundAuthor) {
-            return res.status(404).json({ message: 'Autore non trovato.' });
-        }
-        // Verifica se la password è valida
-        const isPasswordValid = await foundAuthor.comparePassword(password);
-        if (!isPasswordValid) {
-            // Se la password non è valida, invia un messaggio di errore
-            return res.status(401).json({ message: 'Password non valida.' });
-        }
-        // Se si arriva a questo punto, la password è valida, invia l'autore come risposta
-        res.json(foundAuthor);
-    } catch (err) {
-        // Se si verifica un errore, invia un messaggio di errore come risposta
-        console.error(err);
-        res.status(500).json({ message: 'Si è verificato un errore durante il recupero dell\'autore.' });
-    }
-};
-
 
 // Metodo per creare un nuovo autore
 exports.createAuthor = async (req, res) => {

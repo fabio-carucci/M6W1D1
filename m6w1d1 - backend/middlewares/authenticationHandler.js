@@ -1,35 +1,24 @@
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 
 // Funzione middleware per gestire l'autenticazione
-const authenticationMiddleware = (req, res, next) => {
-    // Controlla se l'header Authorization è presente
-    const authHeader = req.headers['authorization'];
-
-    // Se l'header Authorization non è presente, restituisci 401 Unauthorized
-    if (!authHeader) {
-        return res.status(401).json({ error: 'Manca l\'header Authorization' });
+const verifyToken = (req, res, next) => {
+    const token = req.headers['authorization']; // Ottieni il token dall'intestazione Authorization
+    if (!token) {
+        return res.status(401).json({ message: 'Token non fornito.' });
     }
 
-    // Controlla se l'header Authorization inizia con "Bearer "
-    const [bearer, token] = authHeader.split(' ');
+    const myToken = token.split(' ')[2]; // Ottengo il token senza la prima parte, esempio "Bearer "
 
-    if (bearer !== 'Bearer' || !token) {
-        return res.status(401).json({ error: 'Formato non valido per l\'header Authorization' });
-    }
+    const secret = process.env.SECRET_PASSWORD;
 
-    const secretPassword = process.env.SECRET_PASSWORD; // Leggi la password dal file .env
-
-    if (!secretPassword) {
-        return res.status(500).json({ error: 'Password non trovata' });
-    }
-
-    if (token === secretPassword) {
-        // Se il token corrisponde alla password, procedi al middleware successivo
-        return next();
-    }
-    
-    // Se il token non corrisponde alla password, restituisci 401 Unauthorized
-    return res.status(401).json({ error: 'Token non valido' });
+    jwt.verify(myToken, secret, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ message: 'Token non valido.' });
+        }
+        req.authorId = decoded.id; // Aggiungi l'ID dell'autore decodificato all'oggetto di richiesta per utilizzarlo nelle richieste successive
+        next();
+    });
 };
 
-module.exports = authenticationMiddleware;
+module.exports = verifyToken;

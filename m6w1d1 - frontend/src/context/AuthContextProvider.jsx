@@ -6,60 +6,77 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthContextProvider = ({ children }) => {
 
-  const [user, setUser] = useState(null); // Stato per l'utente autenticato
+  const [token, setToken] = useState(""); // Stato per memorizzare il token dell'utente
+  const [user, setUser] = useState(null); // Stato per memorizzare l'utente autenticato
   const [isLogged, setIsLogged] = useState(false); // Stato per gestire se l'utente è autenticato o meno
-  const [logoutTimer, setLogoutTimer] = useState(null); // Timer per il logout automatico
+  const [sessionExpired, setSessionExpired] = useState(false); // Stato per gestire l'avviso di sessione scaduta
 
-  // Funzione per avviare il timer per il logout automatico
-  function startLogoutTimer () {
+  // Funzione per controllare la validità del token
+  const checkTokenValidity = () => {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) return; // Se non c'è un token salvato, esci
 
-    const timer = setTimeout(() => {
+    // Decodifica il token per ottenere la data di scadenza
+    const { exp } = JSON.parse(atob(storedToken.split('.')[1]));
+
+    // Se la data di scadenza è nel passato, effettua il logout
+    if (Date.now() >= exp * 1000) {
+      setSessionExpired(true); // Imposta lo stato di sessione scaduta
+      localStorage.setItem("sessionExpired", sessionExpired); // Salva sessionExpired nel localStorage
       logout();
-    }, 30 * 60 * 1000); // Logout dopo 30 minuti di inattività
-
-    setLogoutTimer(timer);
-  };
-
-  // Funzione per resettare il timer per il logout automatico
-  function resetLogoutTimer () {
-    clearTimeout(logoutTimer);
-    startLogoutTimer();
+    }
   };
 
   // Controlla se l'utente è già autenticato al caricamento della pagina utilizzando localStorage
   useEffect(() => {
     const loggedUser = localStorage.getItem("user");
     const isLoggedIn = localStorage.getItem("isLogged");
+    localStorage.setItem("isSessionExpired", sessionExpired);
 
     if (loggedUser !== null && isLoggedIn === "true") {
       setUser(JSON.parse(loggedUser));
       setIsLogged(true);
+
+      checkTokenValidity();
     }
   }, []);
 
-  const login = (userData) => {
-    setUser(userData);
-    setIsLogged(true);
+  useEffect(() => {
+    // Esegue il controllo della validità del token ogni 5 minuti
+    const interval = setInterval(() => {
+      checkTokenValidity();
+    }, 2 * 60 * 1000); // 2 minuti
 
+    // Pulisce l'intervallo quando il componente si smonta
+    return () => clearInterval(interval);
+  }, []);
+
+  const login = (token, userData) => {
+    setToken(token);
+    setIsLogged(true);
+    setUser(userData);
+    setSessionExpired(false);
+
+    localStorage.setItem("token", JSON.stringify(token)); // Memorizza il token di accesso dell'utente nel localStorage
     localStorage.setItem("user", JSON.stringify(userData)); // Memorizza i dati dell'utente nel localStorage
     localStorage.setItem("isLogged", "true"); // Memorizza lo stato di autenticazione nel localStorage
-
-    startLogoutTimer(); // Avvia il timer per il logout automatico
-    console.log(logoutTimer);
+    localStorage.removeItem("sessionExpired");
   };
 
   const logout = () => {
     setUser(null);
     setIsLogged(false);
 
+    localStorage.removeItem("token") // Rimuovi i dati dell'utente dal localStorage
     localStorage.removeItem("user"); // Rimuovi i dati dell'utente dal localStorage
     localStorage.setItem("isLogged", "false"); // Rimuovi lo stato di autenticazione dal localStorage
 
-    clearTimeout(logoutTimer); // Cancella il timer per il logout automatico
+    // Reindirizza alla pagina di login
+    window.location.href = "/login";
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLogged, login, logout, resetLogoutTimer }}>
+    <AuthContext.Provider value={{ token, user, isLogged, login, logout, sessionExpired, setSessionExpired }}>
       {children}
     </AuthContext.Provider>
   );
