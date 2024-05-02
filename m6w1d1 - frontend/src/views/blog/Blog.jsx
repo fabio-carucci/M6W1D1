@@ -5,6 +5,7 @@ import BlogAuthor from "../../components/blog/blog-author/BlogAuthor";
 import BlogLike from "../../components/likes/BlogLike";
 import "./styles.css";
 import { useAuth } from "../../context/AuthContextProvider";
+import CommentList from "../../components/comments/comments-list/CommentList";
 const Blog = props => {
   const [blog, setBlog] = useState({});
   const [loading, setLoading] = useState(true);
@@ -79,6 +80,8 @@ const Blog = props => {
                 __html: blog.content,
               }}
             ></div>
+
+            <CommentList />
           </>
         )}
       </Container>
