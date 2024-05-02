@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Col, Row, Alert } from "react-bootstrap";
 import BlogItem from "../blog-item/BlogItem";
+import { useAuth } from "../../../context/AuthContextProvider"
 
 export default function BlogList({ searchTitle }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const { token } = useAuth();
 
   const fetchPosts = async (searchTitle) => {
     try {
@@ -14,8 +17,13 @@ export default function BlogList({ searchTitle }) {
         url += `?title=${encodeURIComponent(searchTitle)}`;
       }
   
-      const response = await fetch(url);
-  
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+        
       if (!response.ok) {
         throw new Error("Errore durante il recupero dei post del blog");
       }

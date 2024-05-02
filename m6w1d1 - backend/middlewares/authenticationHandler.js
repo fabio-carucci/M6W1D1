@@ -8,7 +8,7 @@ const verifyToken = (req, res, next) => {
         return res.status(401).json({ message: 'Token non fornito.' });
     }
 
-    const myToken = token.split(' ')[2]; // Ottengo il token senza la prima parte, esempio "Bearer "
+    const myToken = token.split(' ')[1]; // Ottengo il token senza la prima parte, esempio "Bearer "
 
     const secret = process.env.SECRET_PASSWORD;
 

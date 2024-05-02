@@ -6,7 +6,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthContextProvider = ({ children }) => {
 
-  const [token, setToken] = useState(""); // Stato per memorizzare il token dell'utente
+  const [token, setToken] = useState(null); // Stato per memorizzare il token dell'utente
   const [user, setUser] = useState(null); // Stato per memorizzare l'utente autenticato
   const [isLogged, setIsLogged] = useState(false); // Stato per gestire se l'utente è autenticato o meno
   const [sessionExpired, setSessionExpired] = useState(false); // Stato per gestire l'avviso di sessione scaduta
@@ -31,11 +31,13 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const loggedUser = localStorage.getItem("user");
     const isLoggedIn = localStorage.getItem("isLogged");
+    const userToken = localStorage.getItem("token");
     localStorage.setItem("isSessionExpired", sessionExpired);
 
-    if (loggedUser !== null && isLoggedIn === "true") {
+    if (loggedUser !== null && userToken !== null && isLoggedIn === "true") {
       setUser(JSON.parse(loggedUser));
       setIsLogged(true);
+      setToken(userToken)
 
       checkTokenValidity();
     }
@@ -57,7 +59,7 @@ export const AuthContextProvider = ({ children }) => {
     setUser(userData);
     setSessionExpired(false);
 
-    localStorage.setItem("token", JSON.stringify(token)); // Memorizza il token di accesso dell'utente nel localStorage
+    localStorage.setItem("token", token); // Memorizza il token di accesso dell'utente nel localStorage
     localStorage.setItem("user", JSON.stringify(userData)); // Memorizza i dati dell'utente nel localStorage
     localStorage.setItem("isLogged", "true"); // Memorizza lo stato di autenticazione nel localStorage
     localStorage.removeItem("sessionExpired");

@@ -4,16 +4,24 @@ import { useNavigate, useParams } from "react-router-dom";
 import BlogAuthor from "../../components/blog/blog-author/BlogAuthor";
 import BlogLike from "../../components/likes/BlogLike";
 import "./styles.css";
+import { useAuth } from "../../context/AuthContextProvider";
 const Blog = props => {
   const [blog, setBlog] = useState({});
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const { token } = useAuth();
+
   const getPostById = async () => {
     try {
       if (!id) return; // Evita di fare la richiesta se l'ID non è disponibile
-      const response = await fetch(`http://localhost:5001/blogPosts/${id}`);
+      const response = await fetch(`http://localhost:5001/blogPosts/${id}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (!response.ok) {
         throw new Error("Errore durante il recupero del post");
       }

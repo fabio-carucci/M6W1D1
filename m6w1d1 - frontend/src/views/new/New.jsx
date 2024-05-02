@@ -10,7 +10,7 @@ const NewBlogPost = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
 
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   
   const [formData, setFormData] = useState({
     title: "",
@@ -66,6 +66,7 @@ const NewBlogPost = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(formData),
       });
