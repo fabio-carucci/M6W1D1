@@ -10,7 +10,7 @@ function generateToken(author) {
         id: author._id,
         email: author.email
     };
-    return jwt.sign(payload, secret, { expiresIn: '1m' }); // Il token scade dopo 1 ora
+    return jwt.sign(payload, secret, { expiresIn: '1h' }); // Il token scade dopo 1 ora
 };
 
 // Metodo per ottenere un singolo autore dall'email e verificare la password

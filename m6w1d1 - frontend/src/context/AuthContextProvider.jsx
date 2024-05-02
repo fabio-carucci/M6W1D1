@@ -45,7 +45,7 @@ export const AuthContextProvider = ({ children }) => {
     // Esegue il controllo della validità del token ogni 5 minuti
     const interval = setInterval(() => {
       checkTokenValidity();
-    }, 2 * 60 * 1000); // 2 minuti
+    }, 5 * 60 * 1000); // 5 minuti
 
     // Pulisce l'intervallo quando il componente si smonta
     return () => clearInterval(interval);
