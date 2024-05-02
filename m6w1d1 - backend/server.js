@@ -4,7 +4,9 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 const { badRequestHandler, genericErrorHandle } = require('./middlewares/errorHandler');
+const verifyToken = require('./middlewares/authenticationHandler');
 
+const loginRoutes = require('./routes/loginRoutes') // Importa le routes di login e signup
 const authorsRoutes = require('./routes/authorsRoutes'); // Importa le routes degli autori
 const blogPostsRoutes = require('./routes/blogPostsRoutes'); // Importa le routes dei post del Blog
 const commentsRoutes = require('./routes/commentsRoutes') // Importa le routes dei commenti dei post
@@ -20,10 +22,13 @@ app.use(cors());
 // Middleware per analizzare i body delle richieste in formato JSON
 app.use(express.json());
 
+// Route di login 
+app.use('/', loginRoutes);
+
 // Utilizza le routes
-app.use('/', authorsRoutes);
-app.use('/', blogPostsRoutes);
-app.use('/', commentsRoutes);
+app.use('/', verifyToken, authorsRoutes);
+app.use('/', verifyToken, blogPostsRoutes);
+app.use('/', verifyToken, commentsRoutes);
 
 // Regola di fallback per il routing client-side
 app.get('*', (req, res) => {
