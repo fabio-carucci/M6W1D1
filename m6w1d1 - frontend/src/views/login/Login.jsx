@@ -11,13 +11,22 @@ export default function Auth() {
 
     const { sessionExpired, setSessionExpired } = useAuth();
 
-    useEffect(()=> {
+    useEffect(() => {
         const isSessionExpired = localStorage.getItem('sessionExpired');
-
+      
         if (isSessionExpired) {
-            setSessionExpired(isSessionExpired);
+          setSessionExpired(true);
+      
+          // Imposta sessionExpired su false dopo 10 secondi
+          const timeoutId = setTimeout(() => {
+            setSessionExpired(false);
+            localStorage.removeItem('sessionExpired'); // Rimuove il flag di sessione scaduta dal localStorage
+          }, 10000); // 10 secondi
+      
+          return () => clearTimeout(timeoutId);
         }
-    }, []);
+      }, []);
+      
 
     // Funzione per gestire il cambio tra login e registrazione
     const toggleAuthMode = () => {
