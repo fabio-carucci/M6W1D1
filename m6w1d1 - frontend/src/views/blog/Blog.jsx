@@ -6,13 +6,19 @@ import BlogLike from "../../components/likes/BlogLike";
 import "./styles.css";
 import { useAuth } from "../../context/AuthContextProvider";
 import CommentList from "../../components/comments/comments-list/CommentList";
+import CommentForm from "../../components/comments/add-comments/CommentsForm";
 const Blog = props => {
   const [blog, setBlog] = useState({});
   const [loading, setLoading] = useState(true);
+  const [isReloadingComments, setIsReloadingComments] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
   const { token } = useAuth();
+
+  function reloadComments() {
+    setIsReloadingComments(true);
+  }
 
   const getPostById = async () => {
     try {
@@ -80,8 +86,8 @@ const Blog = props => {
                 __html: blog.content,
               }}
             ></div>
-
-            <CommentList />
+            <CommentForm reloadComments={reloadComments}/>
+            <CommentList isReloadingComments={isReloadingComments} setIsReloadingComments={setIsReloadingComments}/>
           </>
         )}
       </Container>

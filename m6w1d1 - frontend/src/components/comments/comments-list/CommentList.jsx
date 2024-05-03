@@ -4,7 +4,7 @@ import CommentsItem from "../comments-item/CommentsItem";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContextProvider"
 
-export default function CommentList() {
+export default function CommentList( { isReloadingComments, setIsReloadingComments } ) {
   const [comments, setComments] = useState([]);  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,6 +36,11 @@ export default function CommentList() {
     }
   };  
 
+  if(isReloadingComments) {
+    fetchComments();
+    setIsReloadingComments(false);
+  }
+
   useEffect(() => {
     fetchComments();
   }, []);
@@ -59,9 +64,7 @@ export default function CommentList() {
           key={`item-${i}`}
           md={6}
           xs={12}
-          style={{
-            marginBottom: 50,
-          }}
+          className="mb-3"
         >
           <CommentsItem key={comment.createdBy} {...comment} />
         </Col>

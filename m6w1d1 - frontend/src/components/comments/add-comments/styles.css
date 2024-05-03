@@ -1,0 +1,6 @@
+.btn-submit {
+    height: fit-content;
+    align-self: center;
+    padding: 0.375rem 0.75rem;
+    margin-left: 5px; /* Sposta il pulsante verso destra */
+}  
