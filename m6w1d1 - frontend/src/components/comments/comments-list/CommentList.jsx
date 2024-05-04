@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Col, Row, Alert } from "react-bootstrap";
+import { Col, Row, Alert, Spinner } from "react-bootstrap";
 import CommentsItem from "../comments-item/CommentsItem";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContextProvider"
 
-export default function CommentList( { isReloadingComments, setIsReloadingComments } ) {
+export default function CommentList( { isReloadingComments, setIsReloadingComments, reloadComments } ) {
   const [comments, setComments] = useState([]);  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,6 +15,8 @@ export default function CommentList( { isReloadingComments, setIsReloadingCommen
 
   const fetchComments = async () => {
     try {
+      setLoading(true);
+
       let url = `http://localhost:5001/blogPosts/${id}/comments`;
   
       const response = await fetch(url, {
@@ -28,26 +30,31 @@ export default function CommentList( { isReloadingComments, setIsReloadingCommen
         throw new Error("Errore durante il recupero dei commenti del blog");
       }
       const data = await response.json();
-      setComments(data.comments);
-      setLoading(false);
+
+      // Ordina i commenti per createdAt in ordine decrescente
+      const sortedComments = data.comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      setComments(sortedComments);
     } catch (error) {
       setError(error.message);
+    } finally {
       setLoading(false);
+      if (isReloadingComments) {
+        setIsReloadingComments(false);
+      }
     }
   };  
 
-  if(isReloadingComments) {
-    fetchComments();
-    setIsReloadingComments(false);
-  }
+  useEffect(() => {
+    if (isReloadingComments) {
+      fetchComments();
+    }
+  }, [isReloadingComments]);
+  
 
   useEffect(() => {
     fetchComments();
   }, []);
-
-  if (loading) {
-    return <p>Caricamento...</p>;
-  }
 
   if (error) {
     return <Alert variant="danger">{error}</Alert>;
@@ -59,16 +66,20 @@ export default function CommentList( { isReloadingComments, setIsReloadingCommen
 
   return (
     <Row>
-      {comments.map((comment, i) => (
-        <Col
-          key={`item-${i}`}
-          md={6}
-          xs={12}
-          className="mb-3"
-        >
-          <CommentsItem key={comment.createdBy} {...comment} />
-        </Col>
-      ))}
+      {loading ? (
+        <Spinner animation="border" role="status" />
+      ) : (
+        comments.map((comment, i) => (
+          <Col
+            key={`item-${i}`}
+            md={6}
+            xs={12}
+            className="mb-3"
+          >
+            <CommentsItem key={comment.createdBy} {...comment} reloadComments={reloadComments} />
+          </Col>
+        ))
+      )}
     </Row>
-  );
+  );  
 };

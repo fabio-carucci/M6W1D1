@@ -29,7 +29,9 @@ export default function LoginForm() {
 
       // Verifico se la risposta è stata ricevuta correttamente
       if (!response.ok) {
-        throw new Error('Errore durante la richiesta al server');
+        // Recupera il messaggio di errore dal corpo della risposta
+        const { message } = await response.json();
+        throw new Error(message);
       }
       
       // Recupera i dati dell'utente loggato dal corpo della risposta

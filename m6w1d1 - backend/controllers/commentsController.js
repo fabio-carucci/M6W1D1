@@ -8,10 +8,10 @@ exports.getCommentsByBlogPostId = async (req, res) => {
         // Estrai l'ID del post dalla richiesta
         const { id } = req.params;
         
-        // Cerca il post nel database utilizzando l'ID e popola solo i campi 'nome', 'cognome' e 'avatar' di 'createdBy'
+        // Cerca il post nel database utilizzando l'ID e popola solo i campi '_id', 'nome', 'cognome' e 'avatar' di 'createdBy'
         const post = await blogPost.findById(id).populate({
             path: 'comments.createdBy',
-            select: 'nome cognome avatar'
+            select: '_id nome cognome avatar'
         });
 
         // Verifica se il post è stato trovato

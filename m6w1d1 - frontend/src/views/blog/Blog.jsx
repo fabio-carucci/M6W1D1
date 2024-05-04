@@ -87,7 +87,7 @@ const Blog = props => {
               }}
             ></div>
             <CommentForm reloadComments={reloadComments}/>
-            <CommentList isReloadingComments={isReloadingComments} setIsReloadingComments={setIsReloadingComments}/>
+            <CommentList isReloadingComments={isReloadingComments} setIsReloadingComments={setIsReloadingComments} reloadComments={reloadComments}/>
           </>
         )}
       </Container>

@@ -123,9 +123,23 @@ exports.createAuthor = async (req, res) => {
             ...req.body,
             avatar: avatarUrl // Imposta l'avatar solo se è stato caricato un file
         });
-        // Invia il nuovo autore creato come risposta
-        res.status(201).json(newAuthor);
-    } catch (err) {
+
+        // Se l'utente è registrato con successo, genera un token JWT
+        const token = generateToken(newAuthor);
+
+        // Creazione di un nuovo oggetto senza password e data di nascita
+        const newAuthorData = {
+            _id: newAuthor._id,
+            nome: newAuthor.nome,
+            cognome: newAuthor.cognome,
+            email: newAuthor.email, 
+            avatar: newAuthor.avatar
+        };
+
+        // Invia il token JWT al client
+        res.json({ token, author: newAuthorData})
+
+        } catch (err) {
         // Se si verifica un errore, invia un messaggio di errore come risposta
         console.error(err);
         res.status(500).json({ message: 'Si è verificato un errore durante la creazione dell\'autore.' });

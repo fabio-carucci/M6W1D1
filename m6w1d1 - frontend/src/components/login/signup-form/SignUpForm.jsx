@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import "./styles.css";
 
-export default function SigninForm() {
+export default function SignUpForm() {
 
   const { login } = useAuth();
 
@@ -35,11 +35,11 @@ export default function SigninForm() {
       // Controlla se la richiesta è andata a buon fine
       if (response.ok) {
 
-        // Recupera i dati dell'utente registrato dal corpo della risposta
-        const userData = await response.json();
+      // Recupera i dati dell'utente registrato dal corpo della risposta
+      const {token, author} = await response.json()
 
-        // Se la registrazione è avvenuta con successo, esegui l'accesso
-        await login(userData);
+      // Eseguo il login utilizzando i dati del formData
+      await login(token, author);
 
       } else {
         // Se la richiesta ha fallito, gestisci l'errore

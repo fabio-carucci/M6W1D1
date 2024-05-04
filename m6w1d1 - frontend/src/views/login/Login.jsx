@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Button, Col } from "react-bootstrap";
 import logo from "../../assets/logo.png"
 import LoginForm from "../../components/login/login-form/LoginForm";
-import SigninForm from "../../components/login/signin-form/SigninForm";
+import SignUpForm from "../../components/login/signup-form/SignUpForm";
 import { useAuth } from '../../context/AuthContextProvider';
 import './styles.css'
 
@@ -46,7 +46,7 @@ export default function Auth() {
                 </Col>
                 <Col xs={12} md={6} >
                     <h2>{isLogin ? "Login" : "Signup"}</h2>
-                    {isLogin ? <LoginForm /> : <SigninForm />}
+                    {isLogin ? <LoginForm /> : <SignUpForm />}
                     {/* Link per cambiare tra login e registrazione */}
                     <Button variant="link" className="p-0 mt-1" style={{color: "rgb(200, 0, 0)"}} onClick={toggleAuthMode}>
                         {isLogin ? "Non hai un account? Registrati" : "Hai già un account? Accedi"}

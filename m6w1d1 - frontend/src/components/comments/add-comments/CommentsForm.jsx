@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContextProvider";
 import "./styles.css";
 
-export default function CommentForm({ reloadComments }) {
+export default function CommentForm( { reloadComments }) {
 const [commentText, setCommentText] = useState("");
 const [loading, setLoading] = useState(false);
 const { user, token } = useAuth();
