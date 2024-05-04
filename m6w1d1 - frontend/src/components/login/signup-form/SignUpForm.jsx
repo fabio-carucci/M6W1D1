@@ -88,9 +88,10 @@ export default function SignUpForm() {
             selected={startDate}
             onChange={(date) => setStartDate(date)}
             dateFormat="dd/MM/yyyy" // Formato della data
-            showYearDropdown // Mostra un dropdown per selezionare l'anno
-            scrollableYearDropdown // Abilita la scrollbar nel dropdown per gli anni
-            yearDropdownItemNumber={15} // Numero di anni mostrati nel dropdown
+            peekNextMonth
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
             maxDate={new Date()} // Imposta la data massima selezionabile come data odierna
             required
           />
