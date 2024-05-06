@@ -50,6 +50,25 @@ exports.getAuthorByEmail = async (req, res) => {
     }
 };
 
+// Metodo per aggiornare il token prima della scadenza
+exports.refreshToken = async (req, res) => {
+    try {
+        const { user } = req.body; // Ottieni l'utente dalla richiesta
+        if (!user) {
+            return res.status(401).json({ message: "Utente non autorizzato" });
+        }
+
+        // Genera un nuovo token con lo stesso payload dell'utente attuale
+        const newToken = generateToken(user);
+
+        // Invia il nuovo token nella risposta
+        res.status(200).json({ token: newToken });
+    } catch (error) {
+        console.error("Errore durante l'aggiornamento del token:", error);
+        res.status(500).json({ message: "Errore durante l'aggiornamento del token" });
+    }
+};
+
 // Metodo per ottenere il profilo dell'autore autenticato tramite token
 exports.getMyProfile = async (req, res) => {
     try {

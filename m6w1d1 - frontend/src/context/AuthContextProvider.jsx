@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import TokenExpirationAlert from "../components/token-expiration-alert/TokenExpirationAlert";
 
 const AuthContext = createContext();
 
@@ -20,10 +21,22 @@ export const AuthContextProvider = ({ children }) => {
     const { exp } = JSON.parse(atob(storedToken.split('.')[1]));
 
     // Se la data di scadenza è nel passato, effettua il logout
-    if (Date.now() >= exp * 1000) {
-      setSessionExpired(true); // Imposta lo stato di sessione scaduta
-      localStorage.setItem("sessionExpired", sessionExpired); // Salva sessionExpired nel localStorage
-      logout();
+    // if (Date.now() >= exp * 1000) {
+    //   setSessionExpired(true); // Imposta lo stato di sessione scaduta
+    //   localStorage.setItem("sessionExpired", sessionExpired); // Salva sessionExpired nel localStorage
+    //   logout();
+    // }
+
+    // Calcola il timestamp attuale
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    // Calcola il timestamp di scadenza del token meno 10 minuti
+    const tokenExpirationMinus10Minutes = exp - 600; // 600 secondi = 10 minuti
+
+    // Se il timestamp attuale è maggiore del timestamp di scadenza meno 10 minuti,
+    // imposta sessionExpired a true e mostra il modal TokenExpirationAlert
+    if (currentTime >= tokenExpirationMinus10Minutes) {
+      setSessionExpired(true);
     }
   };
 
@@ -32,7 +45,6 @@ export const AuthContextProvider = ({ children }) => {
     const loggedUser = localStorage.getItem("user");
     const isLoggedIn = localStorage.getItem("isLogged");
     const userToken = localStorage.getItem("token");
-    localStorage.setItem("isSessionExpired", sessionExpired);
 
     if (loggedUser !== null && userToken !== null && isLoggedIn === "true") {
       setUser(JSON.parse(loggedUser));
@@ -62,7 +74,6 @@ export const AuthContextProvider = ({ children }) => {
     localStorage.setItem("token", token); // Memorizza il token di accesso dell'utente nel localStorage
     localStorage.setItem("user", JSON.stringify(userData)); // Memorizza i dati dell'utente nel localStorage
     localStorage.setItem("isLogged", "true"); // Memorizza lo stato di autenticazione nel localStorage
-    localStorage.removeItem("sessionExpired");
   };
 
   const logout = () => {
@@ -80,6 +91,7 @@ export const AuthContextProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={{ token, user, isLogged, login, logout, sessionExpired, setSessionExpired }}>
       {children}
+      {sessionExpired && <TokenExpirationAlert logout={logout} user={user} token={token} setToken={setToken} setSessionExpired={setSessionExpired}/>}
     </AuthContext.Provider>
   );
 };

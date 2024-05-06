@@ -3,29 +3,32 @@ import { Container, Row, Button, Col } from "react-bootstrap";
 import logo from "../../assets/logo.png"
 import LoginForm from "../../components/login/login-form/LoginForm";
 import SignUpForm from "../../components/login/signup-form/SignUpForm";
-import { useAuth } from '../../context/AuthContextProvider';
 import './styles.css'
 
 export default function Auth() {
     const [isLogin, setIsLogin] = useState(true); // Stato per gestire se è in corso il login o la registrazione
 
-    const { sessionExpired, setSessionExpired } = useAuth();
+    const [isSessionExpired, setIsSessionExpired] = useState(false);
 
     useEffect(() => {
-        const isSessionExpired = localStorage.getItem('sessionExpired');
+        setIsSessionExpired(localStorage.getItem('isSessionExpired'));
       
         if (isSessionExpired) {
-          setSessionExpired(true);
       
           // Imposta sessionExpired su false dopo 10 secondi
           const timeoutId = setTimeout(() => {
-            setSessionExpired(false);
-            localStorage.removeItem('sessionExpired'); // Rimuove il flag di sessione scaduta dal localStorage
-          }, 10000); // 10 secondi
+            setIsSessionExpired(false);
+            localStorage.removeItem('isSessionExpired'); // Rimuove il flag di sessione scaduta dal localStorage
+          }, 30000); // 30 secondi
       
           return () => clearTimeout(timeoutId);
         }
-      }, []);
+      }, [isSessionExpired]);
+
+    const handleCloseToastMessage = () => {
+        setIsSessionExpired(false);
+        localStorage.removeItem('isSessionExpired');
+    };
       
 
     // Funzione per gestire il cambio tra login e registrazione
@@ -54,12 +57,12 @@ export default function Auth() {
                 </Col>
             </Row>
         {/* Mostra il toast quando sessionExpired è true */}
-        {sessionExpired && (
+        {isSessionExpired && (
             <div className="toast-container position-fixed top-0 end-0 p-3">
                 <div className="toast d-block" role="alert" aria-live="assertive" aria-atomic="true">
                     <div className="toast-header">
                         <strong className="me-auto text-danger">Attenzione</strong>
-                        <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close" onClick={() => setSessionExpired(false)}></button>
+                        <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close" onClick={handleCloseToastMessage}></button>
                     </div>
                     <div className="toast-body">
                         La sessione è scaduta. Si prega di effettuare nuovamente il login.
