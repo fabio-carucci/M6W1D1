@@ -94,8 +94,17 @@ exports.getMyProfile = async (req, res) => {
 // Metodo per ottenere la lista degli autori
 exports.getAuthors = async (req, res) => {
     try {
-        // Ottieni la lista degli autori dal database
-        const authors = await author.find();
+        // Controlla se è presente il parametro 'nome' nella query della richiesta
+        const { nome } = req.query;
+        let query = {};
+
+        // Se il parametro 'nome' è presente, crea una query per cercare gli authors con nome corrispondente
+        if (nome) {
+            query = { nome: { $regex: nome, $options: 'i' } }; // Utilizza regex per una corrispondenza non case-sensitive
+        }
+
+        // Ottieni la lista degli autori dal database con la query appropriata
+        const authors = await author.find(query);
 
         // Invia la lista degli autori come risposta
         res.json(authors);

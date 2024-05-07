@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Col, Image, Row } from "react-bootstrap";
 import { PersonCircle } from 'react-bootstrap-icons';
 import "./styles.css";

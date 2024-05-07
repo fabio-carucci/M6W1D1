@@ -1,0 +1,20 @@
+.authors-items {
+    border: 2px solid green;
+    border-radius: 5px;
+}
+
+.authors-items img {
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+.authors-items img + div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    border-top: 2px solid green;
+    background-color: rgb(232, 255, 237);
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+}

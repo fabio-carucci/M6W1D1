@@ -57,7 +57,9 @@ export default function BlogList({ searchTitle }) {
       {posts.map((post, i) => (
         <Col
           key={`item-${i}`}
-          md={4}
+          xs={12}
+          md={6}
+          xl={4}
           style={{
             marginBottom: 50,
           }}
