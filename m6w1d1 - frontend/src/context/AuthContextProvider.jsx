@@ -20,13 +20,6 @@ export const AuthContextProvider = ({ children }) => {
     // Decodifica il token per ottenere la data di scadenza
     const { exp } = JSON.parse(atob(storedToken.split('.')[1]));
 
-    // Se la data di scadenza è nel passato, effettua il logout
-    // if (Date.now() >= exp * 1000) {
-    //   setSessionExpired(true); // Imposta lo stato di sessione scaduta
-    //   localStorage.setItem("sessionExpired", sessionExpired); // Salva sessionExpired nel localStorage
-    //   logout();
-    // }
-
     // Calcola il timestamp attuale
     const currentTime = Math.floor(Date.now() / 1000);
 
@@ -40,20 +33,25 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
-  // Controlla se l'utente è già autenticato al caricamento della pagina utilizzando localStorage
-  useEffect(() => {
-    const loggedUser = localStorage.getItem("user");
-    const isLoggedIn = localStorage.getItem("isLogged");
-    const userToken = localStorage.getItem("token");
+// Controlla se l'utente è già autenticato al caricamento della pagina utilizzando localStorage
+useEffect(() => {
+  const loggedUser = localStorage.getItem("user");
+  const isLoggedIn = localStorage.getItem("isLogged");
+  const userToken = localStorage.getItem("token");
 
-    if (loggedUser !== null && userToken !== null && isLoggedIn === "true") {
-      setUser(JSON.parse(loggedUser));
-      setIsLogged(true);
-      setToken(userToken)
+  if (loggedUser !== null && userToken !== null && isLoggedIn === "true") {
+    setUser(JSON.parse(loggedUser));
+    setIsLogged(true);
+    setToken(userToken);
 
-      checkTokenValidity();
+    // Controlla se il token è scaduto
+    const { exp } = JSON.parse(atob(userToken.split('.')[1]));
+    if (Date.now() >= exp * 1000) {
+      logout();
     }
-  }, []);
+  }
+}, []);
+
 
   useEffect(() => {
     // Esegue il controllo della validità del token ogni 5 minuti
