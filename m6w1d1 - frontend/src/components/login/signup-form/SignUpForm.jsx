@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Spinner } from 'react-bootstrap';
+import { Form, Button, Spinner, Modal } from 'react-bootstrap';
 import { useAuth } from '../../../context/AuthContextProvider';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -9,40 +9,35 @@ export default function SignUpForm() {
 
   const { login } = useAuth();
 
-  const [startDate, setStartDate] = useState(new Date()); // Stato per memorizzare la data di nascita selezionata
-  const [loading, setLoading] = useState(false); // Stato per il caricamento
+  const [startDate, setStartDate] = useState(new Date());
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false); // Stato per controllare la visualizzazione del modale
 
-  // Funzione per gestire la sottomissione del form
+  const handleClose = () => setShowModal(false); // Funzione per chiudere il modale
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       setLoading(true);
-      const formData = new FormData(); // Creazione di un oggetto FormData
-      formData.append('nome', e.target.formBasicFirstName.value); // Aggiungi il nome
-      formData.append('cognome', e.target.formBasicLastName.value); // Aggiungi il cognome
-      formData.append('email', e.target.formBasicEmail.value); // Aggiungi l'email
-      formData.append('password', e.target.formBasicPassword.value); // Aggiungi la password
-      formData.append('dataDiNascita', startDate.toISOString()); // Aggiungi la data di nascita come stringa ISO
-      formData.append('avatar', e.target.formBasicAvatar.files[0]); // Aggiungi l'avatar come file
+      const formData = new FormData();
+      formData.append('nome', e.target.formBasicFirstName.value);
+      formData.append('cognome', e.target.formBasicLastName.value);
+      formData.append('email', e.target.formBasicEmail.value);
+      formData.append('password', e.target.formBasicPassword.value);
+      formData.append('dataDiNascita', startDate.toISOString());
+      formData.append('avatar', e.target.formBasicAvatar.files[0]);
 
-      // Effettua la richiesta POST
       const response = await fetch('http://localhost:5001/authors', {
         method: 'POST',
-        body: formData // Utilizza l'oggetto FormData come corpo della richiesta
+        body: formData
       });
 
-      // Controlla se la richiesta è andata a buon fine
       if (response.ok) {
-
-      // Recupera i dati dell'utente registrato dal corpo della risposta
-      const {token, author} = await response.json()
-
-      // Eseguo il login utilizzando i dati del formData
-      await login(token, author);
-
+        const { token, author } = await response.json();
+        await login(token, author);
+        setShowModal(false); // Chiudi il modale dopo la registrazione
       } else {
-        // Se la richiesta ha fallito, gestisci l'errore
         console.error('Errore durante la registrazione');
       }
 
@@ -50,64 +45,73 @@ export default function SignUpForm() {
       console.error('Errore durante la registrazione:', error.message);
 
     } finally {
-      setLoading(false); // Imposta lo stato di caricamento su false dopo la richiesta
+      setLoading(false);
     }
   };
 
   return (
     <div>
-      <Form onSubmit={handleSubmit}>
-        {/* Campo Nome */}
-        <Form.Group controlId="formBasicFirstName">
-          <Form.Label>Nome</Form.Label>
-          <Form.Control type="text" placeholder="Inserisci il tuo nome" required />
-        </Form.Group>
+      <Button variant="link" className="p-0 mt-3" style={{color: "rgb(200, 0, 0)"}} onClick={() => setShowModal(true)}>
+        Non hai un account? Registrati
+      </Button>
 
-        {/* Campo Cognome */}
-        <Form.Group controlId="formBasicLastName">
-          <Form.Label>Cognome</Form.Label>
-          <Form.Control type="text" placeholder="Inserisci il tuo cognome" required />
-        </Form.Group>
+      <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Registrazione</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="formBasicFirstName">
+              <Form.Label>Nome</Form.Label>
+              <Form.Control type="text" placeholder="Inserisci il tuo nome" required />
+            </Form.Group>
 
-        {/* Campo Email */}
-        <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email</Form.Label>
-          <Form.Control type="email" placeholder="Inserisci la tua email" required />
-        </Form.Group>
+            <Form.Group controlId="formBasicLastName">
+              <Form.Label>Cognome</Form.Label>
+              <Form.Control type="text" placeholder="Inserisci il tuo cognome" required />
+            </Form.Group>
 
-        {/* Campo Password */}
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Inserisci la tua password" required />
-        </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" placeholder="Inserisci la tua email" required />
+            </Form.Group>
 
-        {/* Campo Data di Nascita */}
-        <Form.Group controlId="formBasicDateOfBirth">
-          <Form.Label>Data di Nascita</Form.Label>
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            dateFormat="dd/MM/yyyy" // Formato della data
-            peekNextMonth
-            showMonthDropdown
-            showYearDropdown
-            dropdownMode="select"
-            maxDate={new Date()} // Imposta la data massima selezionabile come data odierna
-            required
-          />
-        </Form.Group>
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" placeholder="Inserisci la tua password" required />
+            </Form.Group>
 
-        {/* Input per caricare l'avatar */}
-        <Form.Group controlId="formBasicAvatar">
-          <Form.Label>Avatar</Form.Label>
-          <Form.Control type="file" accept="image/*" />
-        </Form.Group>
+            <Form.Group controlId="formBasicDateOfBirth">
+              <Form.Label>Data di Nascita</Form.Label>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                dateFormat="dd/MM/yyyy" // Formato della data
+                peekNextMonth
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                maxDate={new Date()} // Imposta la data massima selezionabile come data odierna
+                required
+              />
+            </Form.Group>
 
-        {/* Bottone per effettuare la registrazione */}
-        <Button variant="primary" className="mt-2" type="submit" disabled={loading}>
-          {loading ? <Spinner animation="border" size="sm" /> : 'Signup'}
-        </Button>
-      </Form>
+            <Form.Group controlId="formBasicAvatar">
+              <Form.Label>Avatar</Form.Label>
+              <Form.Control type="file" accept="image/*" />
+            </Form.Group>
+
+            <div className='text-center'>
+              <Button variant="outline-primary" className="mt-4 ps-4 pe-4" type="submit" disabled={loading}>
+                {loading ? <Spinner animation="border" size="sm" /> : 'Signup'}
+              </Button>
+            </div>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>Chiudi</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
