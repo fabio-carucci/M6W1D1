@@ -5,6 +5,9 @@ const path = require('path');
 require('dotenv').config();
 const { badRequestHandler, genericErrorHandle } = require('./middlewares/errorHandler');
 const verifyToken = require('./middlewares/authenticationHandler');
+const passport = require('passport');
+const googleStrategy = require('./middlewares/passport');
+
 
 const loginRoutes = require('./routes/loginRoutes') // Importa le routes di login e signup
 const authorsRoutes = require('./routes/authorsRoutes'); // Importa le routes degli autori
@@ -21,6 +24,9 @@ app.use(cors());
 
 // Middleware per analizzare i body delle richieste in formato JSON
 app.use(express.json());
+
+// Middleware per strategy di google
+passport.use('google', googleStrategy);
 
 // Route di login 
 app.use('/', loginRoutes);

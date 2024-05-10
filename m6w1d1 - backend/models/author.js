@@ -17,7 +17,7 @@ const authorSchema = new mongoose.Schema({
     },
     dataDiNascita: {
         type: Date,
-        required: true
+        required: false
     },
     avatar: {
         type: String,
@@ -25,7 +25,11 @@ const authorSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: false
+    }, 
+    googleId: {
+        type: String,
+        required: false
     }
 });
 
