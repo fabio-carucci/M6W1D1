@@ -87,7 +87,7 @@ useEffect(() => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, isLogged, login, logout, sessionExpired, setSessionExpired }}>
+    <AuthContext.Provider value={{ token, user, setUser, isLogged, login, logout, sessionExpired, setSessionExpired }}>
       {children}
       {sessionExpired && <TokenExpirationAlert logout={logout} user={user} token={token} setToken={setToken} setSessionExpired={setSessionExpired}/>}
     </AuthContext.Provider>

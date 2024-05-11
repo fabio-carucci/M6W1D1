@@ -1,0 +1,32 @@
+.profile-container {
+    margin-top: 120px;
+}
+
+.avatar-image {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 20px; 
+}
+
+.avatar-wrapper {
+    position: relative;
+}
+
+.edit-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    visibility: hidden; /* Icona di modifica inizialmente nascosta */
+    color: white;
+}
+
+.edit-icon label:hover {
+    cursor: pointer;
+    color: red;
+}
+
+.avatar-wrapper:hover .edit-icon {
+    visibility: visible; /* Mostra l'icona di modifica quando il mouse passa sopra l'immagine */
+}

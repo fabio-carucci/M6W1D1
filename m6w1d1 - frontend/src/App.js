@@ -5,7 +5,8 @@ import Home from "./views/home/Home";
 import Authors from "./views/authors/Authors";
 import Blog from "./views/blog/Blog";
 import NewBlogPost from "./views/new/New";
-import Login from "./views/login/Login"; // Importa il componente della pagina di login
+import Login from "./views/login/Login";
+import Profile from "./views/profile/Profile";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContextProvider";
 
@@ -26,6 +27,7 @@ function App() {
             <Route path="/authors" element={<Authors />} />
             <Route path="/blog/:id" element={<Blog />} />
             <Route path="/new" element={<NewBlogPost />} />
+            <Route path="/profile" element={<Profile />} />
           </>
         )}
         {/* Reindirizza l'utente alla home se prova ad accedere alla pagina di login dopo aver effettuato l'accesso */}
