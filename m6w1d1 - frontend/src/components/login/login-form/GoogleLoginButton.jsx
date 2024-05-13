@@ -19,13 +19,13 @@ export default function GoogleLoginButton() {
     const accessToken = getAccessTokenFromQuery();
 
     const handleGoogleLoginClick = () => {
-        const googleAuthUrl = "http://localhost:5001/googleLogin";
+        const googleAuthUrl = "https://m6w1d1-inzr.onrender.com/googleLogin";
         window.open(googleAuthUrl, "_self");
       };
     
       const fetchMyProfile = async () => {
         try {
-          const response = await fetch('http://localhost:5001/me', {
+          const response = await fetch('https://m6w1d1-inzr.onrender.com/me', {
             method: 'GET', 
             headers: {
               'Authorization': `Bearer ${accessToken}`
