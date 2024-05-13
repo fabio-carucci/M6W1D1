@@ -19,8 +19,20 @@ const db = process.env.DB_URL;
 
 const app = express(); // Crea un'istanza di Express
 
+const whitelist = ["https://epiblog-fabiocarucci.vercel.app"];
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (!origin || whitelist.some((domain) => {origin.startsWith(domain)})) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not Allowed by CORS"));
+        }
+    },
+};
+
 // Middleware per consentire le richieste CORS dal frontend
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Middleware per analizzare i body delle richieste in formato JSON
 app.use(express.json());
