@@ -11,7 +11,7 @@ router
     .get('/googleLogin', passport.authenticate("google", {scope: ["profile", "email"]})) // Route GET per il login con Google
     .get('/callback', passport.authenticate("google", {session: false}), (req, res, next) => {
         try {
-            res.redirect(`http://localhost:3000/?accessToken=${req.user.token}`)
+            res.redirect(`https://epiblog-fabiocarucci.vercel.app/?accessToken=${req.user.token}`)
         } catch (error) {
             next(error);
         }
