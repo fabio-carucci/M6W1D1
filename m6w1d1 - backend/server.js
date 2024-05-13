@@ -25,6 +25,10 @@ app.use(cors());
 // Middleware per analizzare i body delle richieste in formato JSON
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.send("server listening")
+});
+
 // Middleware per strategy di google
 passport.use('google', googleStrategy);
 
