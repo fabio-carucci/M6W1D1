@@ -23,7 +23,7 @@ const handleSubmit = async (e) => {
         setLoading(true);
 
         // Effettua la fetch per inviare il commento al backend
-        const response = await fetch(`http://localhost:5001/blogPosts/${id}`, {
+        const response = await fetch(`https://m6w1d1-inzr.onrender.com/blogPosts/${id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

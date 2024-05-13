@@ -16,7 +16,7 @@ export default function CommentsItem ( { _id: commentId, content, createdBy, cre
 
     const deleteComment = async () => {
         try {
-            const response = await fetch(`http://localhost:5001/blogPosts/${id}/comment/${commentId}`, {
+            const response = await fetch(`https://m6w1d1-inzr.onrender.com/blogPosts/${id}/comment/${commentId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}` // Assicurati di includere il token JWT

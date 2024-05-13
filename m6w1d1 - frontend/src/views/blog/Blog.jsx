@@ -23,7 +23,7 @@ const Blog = props => {
   const getPostById = async () => {
     try {
       if (!id) return; // Evita di fare la richiesta se l'ID non è disponibile
-      const response = await fetch(`http://localhost:5001/blogPosts/${id}`, {
+      const response = await fetch(`https://m6w1d1-inzr.onrender.com/blogPosts/${id}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`

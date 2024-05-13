@@ -12,7 +12,7 @@ export default function BlogList({ searchTitle }) {
 
   const fetchPosts = async (searchTitle) => {
     try {
-      let url = "http://localhost:5001/blogPosts";
+      let url = "https://m6w1d1-inzr.onrender.com/blogPosts";
       if (searchTitle) {
         url += `?title=${encodeURIComponent(searchTitle)}`;
       }

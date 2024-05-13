@@ -15,7 +15,7 @@ export default function Profile() {
 
     const fetchPosts = async () => {
         try {
-            const response = await fetch('http://localhost:5001/blogPosts', {
+            const response = await fetch('https://m6w1d1-inzr.onrender.com/blogPosts', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -45,7 +45,7 @@ export default function Profile() {
             const formData = new FormData();
             formData.append('avatar', newImage);
 
-            const response = await fetch(`http://localhost:5001/authors/${id}/avatar`, {
+            const response = await fetch(`https://m6w1d1-inzr.onrender.com/authors/${id}/avatar`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${token}`

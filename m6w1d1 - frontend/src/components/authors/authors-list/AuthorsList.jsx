@@ -11,7 +11,7 @@ export default function AuthorsList( { searchName }) {
 
   const fetchAuthors = async (searchName) => {
     try {
-      let url = "http://localhost:5001/authors";
+      let url = "https://m6w1d1-inzr.onrender.com/authors";
       if (searchName) {
         url += `?nome=${encodeURIComponent(searchName)}`;
       }

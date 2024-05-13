@@ -27,7 +27,7 @@ export default function LoginForm() {
       setLoading(true); // Imposta lo stato di caricamento su true durante la richiesta
 
       // Invio la richiesta POST al server
-      const response = await fetch('http://localhost:5001/login', {
+      const response = await fetch('https://m6w1d1-inzr.onrender.com/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

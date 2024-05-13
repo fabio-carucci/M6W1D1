@@ -17,7 +17,7 @@ export default function CommentList( { isReloadingComments, setIsReloadingCommen
     try {
       setLoading(true);
 
-      let url = `http://localhost:5001/blogPosts/${id}/comments`;
+      let url = `https://m6w1d1-inzr.onrender.com/blogPosts/${id}/comments`;
   
       const response = await fetch(url, {
         method: 'GET',

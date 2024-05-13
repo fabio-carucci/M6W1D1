@@ -28,7 +28,7 @@ export default function SignUpForm() {
       formData.append('dataDiNascita', startDate.toISOString());
       formData.append('avatar', e.target.formBasicAvatar.files[0]);
 
-      const response = await fetch('http://localhost:5001/authors', {
+      const response = await fetch('https://m6w1d1-inzr.onrender.com/authors', {
         method: 'POST',
         body: formData
       });

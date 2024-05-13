@@ -9,7 +9,7 @@ export default function TokenExpirationAlert({ logout, user, token, setToken, se
 
   const refreshToken = async () => {
     try {
-      const response = await fetch('http://localhost:5001/sessionExpired', {
+      const response = await fetch('https://m6w1d1-inzr.onrender.com/sessionExpired', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

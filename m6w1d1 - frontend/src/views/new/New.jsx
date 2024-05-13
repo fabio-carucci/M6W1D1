@@ -62,7 +62,7 @@ const NewBlogPost = () => {
     console.log(formData);
 
     try {
-      await fetch("http://localhost:5001/blogPosts", {
+      await fetch("https://m6w1d1-inzr.onrender.com/blogPosts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
