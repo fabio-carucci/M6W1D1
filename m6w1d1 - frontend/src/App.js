@@ -32,6 +32,7 @@ function App() {
         )}
         {/* Reindirizza l'utente alla home se prova ad accedere alla pagina di login dopo aver effettuato l'accesso */}
         <Route path="/login" element={<Navigate to="/" />} />
+        <Route path="/*" element={<h1>Page Not Found</h1>} />
       </Routes>
       <Footer />  
     </Router>
