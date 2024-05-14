@@ -32,7 +32,7 @@ const corsOptions = {
 };
 
 // Middleware per consentire le richieste CORS dal frontend
-app.use(cors(corsOptions));
+app.use(cors());
 
 // Middleware per analizzare i body delle richieste in formato JSON
 app.use(express.json());
